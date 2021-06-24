@@ -1,6 +1,6 @@
-from uplink import Consumer, get, post, Path, Query, Field, headers, returns
+from uplink import Consumer, get, post, Query, headers, returns, response_handler #, Path, Field
 #import cache
-from gli_py.error_handling import raise_for_status
+from error_handling import raise_for_status
 
 
 # typical base url http://192.168.8.1/cgi-bin/api/
@@ -14,6 +14,7 @@ class GLinet(Consumer):
         # use the token for auth for all requests henceforth
         self.session.headers["Authorization"] = self.login(password)
 
+    @response_handler(raise_for_status)
     @returns.json(key="token")
     @post("router/login")
     def login(self, pwd: Field):
