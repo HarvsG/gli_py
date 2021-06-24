@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#vscode
+.vscode/
+
+#secrets
+router_pwd
+
 # C extensions
 *.so
 
