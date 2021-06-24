@@ -7,9 +7,9 @@ from error_handling import raise_for_status
 class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
 
-    def __init__(self, base_url : str, password : str):
+    def __init__(self, password : str, **kwargs):
         #initialise the super class
-        super(GLinet, self).__init__(base_url=base_url)
+        super(GLinet, self).__init__(**kwargs)
 
         # use the token for auth for all requests henceforth
         self.session.headers["Authorization"] = self.login(password)
