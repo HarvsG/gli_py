@@ -1,4 +1,7 @@
-from uplink import Consumer, get, post, Path, Query, Field, headers, returns, form_url_encoded
+from uplink import Consumer, get, post, Path, Query, Field, headers, returns
+#import cache
+from gli_py.error_handling import raise_for_status
+
 
 # typical base url http://192.168.8.1/cgi-bin/api/
 class GLinet(Consumer):
@@ -17,11 +20,13 @@ class GLinet(Consumer):
         """fetches token"""
         # TODO deal with errors
 
+    #@cache(hours=3)
     @returns.json(key="model")
     @get("router/model")
     def router_model(self):
         """Retrieves the router's model, no auth required"""
 
+    @response_handler(raise_for_status)
     @returns.json(key="mac")
     @get("router/mac/get")
     def router_mac(self):
