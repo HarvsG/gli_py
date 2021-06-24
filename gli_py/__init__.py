@@ -1,9 +1,10 @@
 from glinet import GLinet
-from uplink import AiohttpClient
+
 
 
 # for dev only
 if __name__=="__main__":
+    from uplink import AiohttpClient
     import asyncio
     # read password from file
     with open('router_pwd', 'r') as file:
