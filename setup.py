@@ -1,21 +1,24 @@
-from setuptools import setup, find_packages
-
-with open("README.md", "r") as f:
-    long_description = f.read()
-
+from distutils.core import setup
 setup(
-    name="gli_py",
-    version="0.0.1",
-    author="HarvsG",
-    author_email="doctor@codingdoctor.co.uk",
-    description="A Python 3 API wrapper for the API on GL-inet routers",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/HarvsG/gli_py",
-    packages=find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License, version 3",
-        "Operating System :: OS Independent",
-    ]
+  name = 'gli_py',         
+  packages = ['gli_py'],   
+  version = '0.0.1',      
+  license='	gpl-3.0',       
+  description = 'A python 3 API wrapper for GL-inet routers for consumption by Home Assistant',   
+  author = 'HarvsG',
+  author_email = 'doctor@codingdoctor.co.uk',
+  url = 'https://github.com/HarvsG/gli_py',
+  download_url = 'https://github.com/HarvsG/gli_py/archive/refs/tags/0.0.1.tar.gz',
+  keywords = ['API', 'Router', 'Home Assistant'],
+  install_requires=[
+          'uplink',
+          'requests',
+      ],
+  classifiers=[
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Build Tools',
+    'License :: OSI Approved :: GNU General Public License, version 3',
+    'Programming Language :: Python :: 3.8',
+  ],
 )
