@@ -13,6 +13,9 @@ def raise_for_status(response: Response):
         res = loads(response.text)
         # Gl-inet's api uses its own error codes that are returned in status 200 messages - this is out of spec so we must handle it ourselves
         if res['code'] < 0:
+            if 'msg' not in res:
+                res['msg'] = "null"
+
             raise NonZeroResponse("Request returned error code %s with message:' %s'" % (res['code'], res['msg']))
         return response
 

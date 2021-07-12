@@ -17,4 +17,7 @@ if __name__=="__main__":
     #my_router = GLinet(pwd, base_url="http://192.168.0.1/cgi-bin/api/", client=AiohttpClient())
 
     # get mac (requires auth)
-    print(my_router.router_mac())
+    print(my_router.wan_ip())
+    print(my_router.public_ip())
+    print(my_router.connected_to_internet())
+    print(my_router.sms_status())
