@@ -1,4 +1,4 @@
-from glinet import GLinet
+from gli_py.glinet import GLinet
 
 
 

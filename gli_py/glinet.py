@@ -1,5 +1,6 @@
 from uplink import Consumer, get, post, Query, headers, returns, response_handler, Field #, Path
 #import cache
+
 from error_handling import raise_for_status
 from json import loads
 
@@ -108,7 +109,7 @@ class GLinet(Consumer):
 
     # TODO untested
     @response_handler(raise_for_status)
-    @returns.json(key=modems)
+    @returns.json(key="modems")
     @get("modem/info")
     def _get_modems(self):
         """Returns a list of modems"""
@@ -117,28 +118,30 @@ class GLinet(Consumer):
     def count_modems(self) -> int:
         return len(_get_modems())
 
+    # TODO untested
     @response_handler(raise_for_status)
     @returns.json
     @get("modem/sms/status")
     def sms_status(self):
         """Retrieves the status of the SMS modem"""
 
+    # TODO untested
     @response_handler(raise_for_status)
     @returns.json
     @post("modem/sms/send")
     def _send_sms(self, modem_id: Field, message: Field, number: Field):
         """send an SMS"""
     
-    # send an SMS using the first available modem with a a SIM that is ready
-    def send_sms(number: String, message: String):
+    # TODO untested
+    def send_sms(number: str, message: str):
         modems = _get_modems()
         # if there are no modems raise exception
         if len(modems) == 0:
             raise Exception("No modems found")
         # if there is only one modem try and send the message
-        elif len(modem) == 1:
+        elif len(modems) == 1:
             return _send_sms(modems[0]["modem_id"], message, number)
-        elif len(modem) > 1:
+        elif len(modems) > 1:
             for modem in modems:
                 if modem["SIM_status"] == 0:
                     return _send_sms(modem["modem_id"], message, number)
