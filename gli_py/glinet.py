@@ -105,9 +105,41 @@ class GLinet(Consumer):
         """Retrieves the wireguard status"""
 
     # SMS stuff
+
+    # TODO untested
+    @response_handler(raise_for_status)
+    @returns.json
+    @get("modem/info")
+    def _get_modems(self):
+        """Returns a list of modems"""
+
+    # TODO untested
+    def count_modems(self) -> int:
+        return len(_get_modems()["modems"])
+
     @response_handler(raise_for_status)
     @returns.json
     @get("modem/sms/status")
     def sms_status(self):
         """Retrieves the status of the SMS modem"""
+
+    @response_handler(raise_for_status)
+    @returns.json(key="token")
+    @post("modem/sms/send")
+    def _send_sms(self, modem_id: Field, message: Field, number: Field):
+        """send an SMS"""
     
+    # send an SMS using the first available modem with a a SIM that is ready
+    def send_sms(number: String, message: String):
+        modems = _get_modems()["modems"]
+        # if there are no modems raise exception
+        if len(modems) == 0:
+            raise Exception("No modems found")
+        # if there is only one modem try and send the message
+        elif len(modem) == 1:
+            return _send_sms(modems[0]["modem_id"], message, number)
+        elif len(modem) > 1:
+            for modem in modems:
+                if modem["SIM_status"] == 0:
+                    return _send_sms(modems["modem_id"], message, number)
+        
