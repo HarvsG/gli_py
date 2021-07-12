@@ -108,14 +108,14 @@ class GLinet(Consumer):
 
     # TODO untested
     @response_handler(raise_for_status)
-    @returns.json
+    @returns.json(key=modems)
     @get("modem/info")
     def _get_modems(self):
         """Returns a list of modems"""
 
     # TODO untested
     def count_modems(self) -> int:
-        return len(_get_modems()["modems"])
+        return len(_get_modems())
 
     @response_handler(raise_for_status)
     @returns.json
@@ -124,14 +124,14 @@ class GLinet(Consumer):
         """Retrieves the status of the SMS modem"""
 
     @response_handler(raise_for_status)
-    @returns.json(key="token")
+    @returns.json
     @post("modem/sms/send")
     def _send_sms(self, modem_id: Field, message: Field, number: Field):
         """send an SMS"""
     
     # send an SMS using the first available modem with a a SIM that is ready
     def send_sms(number: String, message: String):
-        modems = _get_modems()["modems"]
+        modems = _get_modems()
         # if there are no modems raise exception
         if len(modems) == 0:
             raise Exception("No modems found")
@@ -141,5 +141,5 @@ class GLinet(Consumer):
         elif len(modem) > 1:
             for modem in modems:
                 if modem["SIM_status"] == 0:
-                    return _send_sms(modems["modem_id"], message, number)
+                    return _send_sms(modem["modem_id"], message, number)
         
