@@ -1,6 +1,5 @@
 from gli_py.glinet import GLinet
-
-
+from gli_py.error_handling import raise_for_status
 
 # for dev only
 if __name__=="__main__":
