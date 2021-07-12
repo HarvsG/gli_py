@@ -1,7 +1,7 @@
 from uplink import Consumer, get, post, Query, headers, returns, response_handler, Field #, Path
 #import cache
 
-from error_handling import raise_for_status
+from gli_py.error_handling import raise_for_status
 from json import loads
 
 
