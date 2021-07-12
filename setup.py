@@ -8,7 +8,7 @@ setup(
   author = 'HarvsG',
   author_email = 'doctor@codingdoctor.co.uk',
   url = 'https://github.com/HarvsG/gli_py',
-  download_url = 'https://github.com/HarvsG/gli_py/archive/refs/tags/0.0.2.tar.gz',
+  download_url = 'https://github.com/HarvsG/gli_py/archive/refs/tags/0.0.3.tar.gz',
   keywords = ['API', 'Router', 'Home Assistant'],
   install_requires=[
           'uplink',
