@@ -1,4 +1,4 @@
-from uplink import Consumer, get, post, Query, headers, returns, response_handler, Field #, Path
+from uplink import Consumer, clients, get, post, Query, headers, returns, response_handler, Field, AiohttpClient, RequestsClient #, Path
 #import cache
 
 from gli_py.error_handling import raise_for_status
@@ -9,9 +9,12 @@ from json import loads
 class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
 
-    def __init__(self, password : str, **kwargs):
+    def __init__(self, password : str, sync : bool = True, **kwargs):
         #initialise the super class
-        super(GLinet, self).__init__(**kwargs)
+        client = None
+        if not sync:
+            client = AiohttpClient()
+        super(GLinet, self).__init__(client=client, **kwargs)
 
         # use the token for auth for all requests henceforth
         self.session.headers["Authorization"] = self.login(password)
@@ -67,7 +70,7 @@ class GLinet(Consumer):
     @returns.json(key="serverip")
     @get("internet/public_ip/get")
     def public_ip(self):
-        """Retrieves the router's public ip"""
+        """Retrieves the router's public ip. Will give VPN IP is connected"""
 
     @response_handler(raise_for_status)
     @returns.json(key="reachable")
@@ -122,7 +125,7 @@ class GLinet(Consumer):
     @response_handler(raise_for_status)
     @returns.json
     @get("modem/sms/status")
-    def sms_status(self):
+    def sms_status(self, modem_id: Field):
         """Retrieves the status of the SMS modem"""
 
     # TODO untested
