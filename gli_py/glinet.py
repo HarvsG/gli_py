@@ -9,7 +9,7 @@ from json import loads
 class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
 
-    def __init__(self, password : str, sync : bool = True, **kwargs):
+    def __init__(self, password : str, sync : bool = True, auto_auth: bool=True,**kwargs):
         #initialise the super class
         client = None
         if not sync:
@@ -17,10 +17,9 @@ class GLinet(Consumer):
         super(GLinet, self).__init__(client=client, **kwargs)
         self._logged_in: bool = False
         # use the token for auth for all requests henceforth
-        try:
-            self.session.headers["Authorization"] = self._login(password)
-        except:
-            raise ConnectionRefusedError("Failed to authenticate with GL-inet")
+        if auto_auth:
+            self.login(password)
+                
 
     @response_handler(raise_for_status)
     @returns.json(key="token")
@@ -28,6 +27,15 @@ class GLinet(Consumer):
     def _login(self, pwd: Field):
         """fetches token"""
         # TODO deal with errors
+
+    def login(self, pwd) -> None:
+        try:
+            self.session.headers["Authorization"] = self._login(pwd)
+            self._logged_in = True
+        except:
+            self._logged_in = False
+            raise ConnectionRefusedError("Failed to authenticate with GL-inet")
+
 
     # Basic device interaction
     @response_handler(raise_for_status)
