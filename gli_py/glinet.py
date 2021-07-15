@@ -15,14 +15,17 @@ class GLinet(Consumer):
         if not sync:
             client = AiohttpClient()
         super(GLinet, self).__init__(client=client, **kwargs)
-
+        self._logged_in: bool = False
         # use the token for auth for all requests henceforth
-        self.session.headers["Authorization"] = self.login(password)
+        try:
+            self.session.headers["Authorization"] = self._login(password)
+        except:
+            raise ConnectionRefusedError("Failed to authenticate with GL-inet")
 
     @response_handler(raise_for_status)
     @returns.json(key="token")
     @post("router/login")
-    def login(self, pwd: Field):
+    def _login(self, pwd: Field):
         """fetches token"""
         # TODO deal with errors
 
@@ -119,7 +122,7 @@ class GLinet(Consumer):
 
     # TODO untested
     def count_modems(self) -> int:
-        return len(_get_modems())
+        return len(self._get_modems())
 
     # TODO untested
     @response_handler(raise_for_status)
@@ -136,16 +139,20 @@ class GLinet(Consumer):
         """send an SMS"""
     
     # TODO untested
-    def send_sms(number: str, message: str):
-        modems = _get_modems()
+    def send_sms(self, number: str, message: str):
+        modems = self._get_modems()
         # if there are no modems raise exception
         if len(modems) == 0:
             raise Exception("No modems found")
         # if there is only one modem try and send the message
         elif len(modems) == 1:
-            return _send_sms(modems[0]["modem_id"], message, number)
+            return self._send_sms(modems[0]["modem_id"], message, number)
         elif len(modems) > 1:
             for modem in modems:
                 if modem["SIM_status"] == 0:
-                    return _send_sms(modem["modem_id"], message, number)
+                    return self._send_sms(modem["modem_id"], message, number)
+
+    @property
+    def logged_in(self):
+        return self._logged_in
         
