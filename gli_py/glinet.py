@@ -5,7 +5,9 @@ from uplink import (
     returns,
     response_handler,
     Field,
-    AiohttpClient)
+    AiohttpClient,
+    timeout)
+import asyncio
 # , Path, clients, RequestsClient, Query, headers,response,handler,
 # import cache
 
@@ -14,6 +16,7 @@ from gli_py.error_handling import raise_for_status
 
 
 # typical base url http://192.168.8.1/cgi-bin/api/
+@timeout(2)
 class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
 
@@ -25,16 +28,19 @@ class GLinet(Consumer):
         **kwargs
     ):
 
-        client = None
+        self.client = None
         if not sync:
-            client = AiohttpClient()
+            self.client = AiohttpClient()
 
         # initialise the super class
-        super(GLinet, self).__init__(client=client, **kwargs)
+        super(GLinet, self).__init__(client=self.client, **kwargs)
         self._logged_in: bool = False
         # use the token for auth for all requests henceforth
         if auto_auth:
-            self.login(password)
+            if not sync:
+                asyncio.run(self.async_login(password))
+            else:
+                self.login(password)
 
     @response_handler(raise_for_status)
     @returns.json(key="token")
@@ -43,13 +49,23 @@ class GLinet(Consumer):
         """fetches token"""
         # TODO deal with errors
 
+    async def async_login(self, pwd) -> None:
+        assert(self.client is not None)
+        try:
+            self.session.headers["Authorization"] = await self._login(pwd)
+            self._logged_in = True
+        except Exception as err:
+            self._logged_in = False
+            raise ConnectionRefusedError("Failed to authenticate with GL-inet. Error %s", err)
+
     def login(self, pwd) -> None:
+        assert(self.client is None)
         try:
             self.session.headers["Authorization"] = self._login(pwd)
             self._logged_in = True
-        except:
+        except Exception as err:
             self._logged_in = False
-            raise ConnectionRefusedError("Failed to authenticate with GL-inet")
+            raise ConnectionRefusedError("Failed to authenticate with GL-inet. Error %s", err)
 
     # Basic device interaction
     @response_handler(raise_for_status)
