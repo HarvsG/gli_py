@@ -1,19 +1,16 @@
 from gli_py.glinet import GLinet
-from gli_py.error_handling import raise_for_status
 
 # for dev only
-if __name__=="__main__":
-    from uplink import AiohttpClient
-    import asyncio
+if __name__ == "__main__":
     # read password from file
     with open('router_pwd', 'r') as file:
         pwd = str(file.read())
-    
-    #create an example router
+
+    # create an example router
     my_router = GLinet(pwd, base_url="http://192.168.0.1/cgi-bin/api/")
 
     # async version
-    #my_router = GLinet(pwd, base_url="http://192.168.0.1/cgi-bin/api/", sync=False)
+    # my_router = GLinet(pwd, base_url="http://192.168.0.1/cgi-bin/api/", sync=False)
 
     # get mac (requires auth)
     print(my_router.wan_ip())

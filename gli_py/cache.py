@@ -1,5 +1,7 @@
+from uplink import decorators
 from uplink.decorators import MethodAnnotation
-from uplink.clients.io import RequestTemplate
+# from uplink.clients.io import RequestTemplate
+
 
 class CachingTemplate(decorators.RequestTemplate):
     def __init__(self, cache, base_url, hours):
@@ -11,7 +13,7 @@ class CachingTemplate(decorators.RequestTemplate):
         method, url, params = request
         urlpath = url.replace(self._base_url, '')
         try:
-            loaded_data =self._cache.load_cached(urlpath, self._hours)
+            loaded_data = self._cache.load_cached(urlpath, self._hours)
             resp = Response()
             resp.status_code = 200
             resp._content = loaded_data

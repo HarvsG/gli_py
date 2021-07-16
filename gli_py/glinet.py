@@ -1,25 +1,40 @@
-from uplink import Consumer, clients, get, post, Query, headers, returns, response_handler, Field, AiohttpClient, RequestsClient #, Path
-#import cache
+from uplink import (
+    Consumer,
+    get,
+    post,
+    returns,
+    response_handler,
+    Field,
+    AiohttpClient)
+# , Path, clients, RequestsClient, Query, headers,response,handler,
+# import cache
 
 from gli_py.error_handling import raise_for_status
-from json import loads
+# from json import loads
 
 
 # typical base url http://192.168.8.1/cgi-bin/api/
 class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
 
-    def __init__(self, password : str, sync : bool = True, auto_auth: bool=True,**kwargs):
-        #initialise the super class
+    def __init__(
+        self,
+        password: str,
+        sync: bool = True,
+        auto_auth: bool = True,
+        **kwargs
+    ):
+
         client = None
         if not sync:
             client = AiohttpClient()
+
+        # initialise the super class
         super(GLinet, self).__init__(client=client, **kwargs)
         self._logged_in: bool = False
         # use the token for auth for all requests henceforth
         if auto_auth:
             self.login(password)
-                
 
     @response_handler(raise_for_status)
     @returns.json(key="token")
@@ -35,7 +50,6 @@ class GLinet(Consumer):
         except:
             self._logged_in = False
             raise ConnectionRefusedError("Failed to authenticate with GL-inet")
-
 
     # Basic device interaction
     @response_handler(raise_for_status)
@@ -67,7 +81,6 @@ class GLinet(Consumer):
     @get("router/reboot")
     def reboot(self):
         """reboot router"""
-
 
     # Basic WAN interaction
 
@@ -107,12 +120,12 @@ class GLinet(Consumer):
         clients = []
         all_clients = self.list_all_clients()
         for client in all_clients:
-            if client['online'] ==True:
+            if client['online'] is True:
                 clients.append(client)
         return clients
 
-
     # VPN information
+
     @response_handler(raise_for_status)
     @returns.json
     @get("wireguard/client/status")
@@ -145,7 +158,7 @@ class GLinet(Consumer):
     @post("modem/sms/send")
     def _send_sms(self, modem_id: Field, message: Field, number: Field):
         """send an SMS"""
-    
+
     # TODO untested
     def send_sms(self, number: str, message: str):
         modems = self._get_modems()
@@ -163,4 +176,3 @@ class GLinet(Consumer):
     @property
     def logged_in(self):
         return self._logged_in
-        
