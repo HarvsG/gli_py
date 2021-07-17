@@ -42,7 +42,7 @@ class GLinet(Consumer):
         super(GLinet, self).__init__(client=self.client, **kwargs)
 
         if self.token is not None:
-            self.logged_in = True
+            self._logged_in = True
             self.session.headers["Authorization"] = self.token
 
     @post("router/login")
