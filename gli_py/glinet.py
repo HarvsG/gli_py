@@ -1,4 +1,5 @@
 import functools
+from typing import Union
 from uplink import (
     Consumer,
     get,
@@ -13,7 +14,7 @@ import asyncio
 # , Path, clients, RequestsClient, Query, headers,response,handler,
 # import cache
 
-from gli_py.error_handling import raise_for_status
+from error_handling import raise_for_status
 # from json import loads
 
 
@@ -26,18 +27,23 @@ class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
     def __init__(
         self,
+        token: str = None,
         sync: bool = True,
         **kwargs
     ):
         self.sync = sync
         self.client = None
         self._logged_in: bool = False
-
+        self.token = token
         if not self.sync:
             self.client = AiohttpClient()
 
         # initialise the super class
         super(GLinet, self).__init__(client=self.client, **kwargs)
+
+        if self.token is not None:
+            self.logged_in = True
+            self.session.headers["Authorization"] = self.token
 
     @post("router/login")
     def _login(self, pwd: Field):
@@ -47,7 +53,9 @@ class GLinet(Consumer):
         assert(self.client is not None)
         try:
             # use the token for auth for all requests henceforth
-            self.session.headers["Authorization"] = await self._login(password)
+            res = await self._login(password)
+            self.token = res['token']
+            self.session.headers["Authorization"] = self.token
             self._logged_in = True
         except Exception as err:
             self._logged_in = False
@@ -57,7 +65,9 @@ class GLinet(Consumer):
         assert(self.client is None)
         try:
             # use the token for auth for all requests henceforth
-            self.session.headers["Authorization"] = self._login(password)
+            res = self._login(password)
+            self.token = res['token']
+            self.session.headers["Authorization"] = self.token
             self._logged_in = True
             print(self.session.headers["Authorization"])
         except Exception as err:
