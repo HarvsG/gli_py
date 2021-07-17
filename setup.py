@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name='gli_py',
   packages=['gli_py'],
-  version='0.0.9',
+  version='0.0.10',
   license='	gpl-3.0',
   description='A python 3 API wrapper for GL-inet routers for consumption by Home Assistant',
   author='HarvsG',
   author_email='doctor@codingdoctor.co.uk',
   url='https://github.com/HarvsG/gli_py',
-  download_url='https://github.com/HarvsG/gli_py/archive/refs/tags/0.0.9.tar.gz',
+  download_url='https://github.com/HarvsG/gli_py/archive/refs/tags/0.0.10.tar.gz',
   keywords=['API', 'Router', 'Home Assistant'],
   install_requires=[
           'uplink',

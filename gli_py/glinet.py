@@ -129,7 +129,7 @@ class GLinet(Consumer):
         assert self.client is None
         clients = []
         all_clients = self.list_all_clients()
-        for client in all_clients:
+        for client in all_clients["clients"]:
             if client['online'] is True:
                 clients.append(client)
         return clients
@@ -139,9 +139,10 @@ class GLinet(Consumer):
         assert self.client is not None
         clients = []
         all_clients = await self.list_all_clients()
-        for client in all_clients:
+        for client in all_clients["clients"]:
             if client['online'] is True:
                 clients.append(client)
+        print(clients)
         return clients
 
     # VPN information
