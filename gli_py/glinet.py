@@ -14,7 +14,7 @@ import asyncio
 # , Path, clients, RequestsClient, Query, headers,response,handler,
 # import cache
 
-from error_handling import raise_for_status
+from gli_py.error_handling import raise_for_status
 # from json import loads
 
 
