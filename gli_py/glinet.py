@@ -125,8 +125,20 @@ class GLinet(Consumer):
         """gets all static clients"""
 
     def connected_clients(self):
+        """gets all connected clients syncronously."""
+        assert self.client is None
         clients = []
         all_clients = self.list_all_clients()
+        for client in all_clients:
+            if client['online'] is True:
+                clients.append(client)
+        return clients
+
+    async def async_connected_clients(self):
+        """gets all connected clients asyncronously."""
+        assert self.client is not None
+        clients = []
+        all_clients = await self.list_all_clients()
         for client in all_clients:
             if client['online'] is True:
                 clients.append(client)
@@ -172,6 +184,20 @@ class GLinet(Consumer):
             for modem in modems:
                 if modem["SIM_status"] == 0:
                     return self._send_sms(modem["modem_id"], message, number)
+
+    # TODO untested
+    async def async_send_sms(self, number: str, message: str):
+        modems = await self._get_modems()
+        # if there are no modems raise exception
+        if len(modems) == 0:
+            raise Exception("No modems found")
+        # if there is only one modem try and send the message
+        elif len(modems) == 1:
+            return await self._send_sms(modems[0]["modem_id"], message, number)
+        elif len(modems) > 1:
+            for modem in modems:
+                if modem["SIM_status"] == 0:
+                    return await self._send_sms(modem["modem_id"], message, number)
 
     @property
     def logged_in(self):
