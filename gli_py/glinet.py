@@ -69,9 +69,9 @@ class GLinet(Consumer):
             self.token = res['token']
             self.session.headers["Authorization"] = self.token
             self._logged_in = True
-            print(self.session.headers["Authorization"])
+            # print(self.session.headers["Authorization"])
         except Exception as err:
-            print("login failure")
+            # print("login failure")
             self._logged_in = False
             raise ConnectionRefusedError("Failed to authenticate with GL-inet. Error %s", err)
 
@@ -124,25 +124,25 @@ class GLinet(Consumer):
     def list_static_clients(self):
         """gets all static clients"""
 
-    def connected_clients(self):
+    def connected_clients(self) -> dict:
         """gets all connected clients syncronously."""
         assert self.client is None
         clients = []
         all_clients = self.list_all_clients()
         for client in all_clients["clients"]:
             if client['online'] is True:
-                clients.append(client)
+                clients[client['mac']] = client
         return clients
 
     async def async_connected_clients(self):
         """gets all connected clients asyncronously."""
         assert self.client is not None
-        clients = []
+        clients = {}
         all_clients = await self.list_all_clients()
         for client in all_clients["clients"]:
             if client['online'] is True:
-                clients.append(client)
-        print(clients)
+                clients[client['mac']] = client
+        #print(clients)
         return clients
 
     # VPN information
