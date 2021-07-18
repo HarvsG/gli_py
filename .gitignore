@@ -8,6 +8,7 @@ __pycache__/
 
 #secrets
 router_pwd
+example_token
 
 # C extensions
 *.so

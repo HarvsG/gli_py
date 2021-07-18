@@ -9,6 +9,9 @@ class UnsuccessfulRequest(Exception):
 class NonZeroResponse(Exception):
     '''raised when the router responds but with a non O code'''
 
+class TokenError(Exception):
+    '''raised when the router responds but with a -1 code'''
+
 
 def raise_for_status(response: Response):
     if type(response) is not uplink.clients.aiohttp_.ThreadedResponse:
@@ -21,10 +24,11 @@ def raise_for_status(response: Response):
                 res = loads(response.text)
                 # Gl-inet's api uses its own error codes that are returned in
                 # status 200 messages - this is out of spec so we must handle it
+                if res['code'] == -1:
+                    raise TokenError("Request returned error code -1 (InvalidAuth), is the token expired or the passowrd wrong?")
                 if res['code'] < 0:
                     if 'msg' not in res:
                         res['msg'] = "null"
-
                     raise NonZeroResponse("Request returned error code %s with message:' %s'" % (res['code'], res['msg']))
                 return res
     else:
@@ -35,6 +39,8 @@ def raise_for_status(response: Response):
                 res = loads(response.text())
                 # Gl-inet's api uses its own error codes that are returned in
                 # status 200 messages - this is out of spec so we must handle it
+                if res['code'] == -1:
+                    raise TokenError("Request returned error code -1 (InvalidAuth), is the token expired or the passowrd wrong?")
                 if res['code'] < 0:
                     if 'msg' not in res:
                         res['msg'] = "null"
