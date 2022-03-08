@@ -34,9 +34,13 @@ def raise_for_status(response: Response):
     else:
         async def proc_res(response):
             """Checks whether or not the response was successful."""
+            print(type(response))
+            print("sync response")
             if 200 <= response.status < 300:
                 # Pass through the response.
                 res = loads(response.text())
+                print("res")
+                print(res)
                 # Gl-inet's api uses its own error codes that are returned in
                 # status 200 messages - this is out of spec so we must handle it
                 if res['code'] == -1:
