@@ -32,6 +32,7 @@ def raise_for_status(response: Response):
                     raise NonZeroResponse("Request returned error code %s with message:' %s'" % (res['code'], res['msg']))
                 return res
     else:
+        print("is async response")
         async def proc_res(response):
             """Checks whether or not the response was successful."""
             print(type(response))
