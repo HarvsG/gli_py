@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name='gli_py',
   packages=['gli_py'],
-  version='0.0.12',
+  version='0.0.13',
   license='	gpl-3.0',
   description='A python 3 API wrapper for GL-inet routers for consumption by Home Assistant',
   author='HarvsG',
