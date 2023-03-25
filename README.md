@@ -1,5 +1,5 @@
 # gli_py
-A python 3 API wrapper for GL-inet routers. [WIP]
+A aysnc python 3 API wrapper for GL-inet routers. [WIP]
 
 [GL-inet](https://www.gl-inet.com/) routers are built on [OpenWRT](https://openwrt.org/). They are highly customizeable but have an attractive user interface.
 
