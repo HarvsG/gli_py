@@ -22,9 +22,9 @@ I thought it would be handy to develop a python 3 wrapper for the API for easy i
 
 Todo list:
 - [ ] Decide on useful endpoints to expose
-- [ ] Expose said enpoints
+- [ ] Expose said endpoints
 - [ ] Write tests
 - [ ] Package correctly
-- [ ] Test that dev enviroment is re-producable
-- [ ] Publish on pip
+- [x] Test that dev enviroment is re-producable
+- [x] Publish on pip
 - [ ] Static typing
