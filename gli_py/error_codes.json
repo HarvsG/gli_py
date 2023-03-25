@@ -3,5 +3,6 @@
  "-250":"Modem not found",
  "-251":"modem_id missing",
  "-260":"Destination phone number missing",
- "-261":"Message content missing"
+ "-261":"Message content missing",
+ "-204":"Null"
 }

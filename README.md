@@ -7,6 +7,17 @@ As part of their modiification of the UI they provide a [locally accessible API]
 
 I thought it would be handy to develop a python 3 wrapper for the API for easy intergation into other services such as [HomeAssistant](https://www.home-assistant.io/)
 
+## Installation
+`pip3 install gli-py`
+
+## Dev setup
+1. Clone the repo
+2. Ensure you have python 3 installed `python3 -V` or `python -V`
+3. Uses poetry for venv control `pip3 install poetry`
+4. `poetry config virtualenvs.in-project true` create the venvs in the project folder
+5. `poetry install`
+6. `poetry shell`
+
 Todo list:
 - [ ] Decide on useful endpoints to expose
 - [ ] Expose said enpoints
@@ -14,3 +25,4 @@ Todo list:
 - [ ] Package correctly
 - [ ] Test that dev enviroment is re-producable
 - [ ] Publish on pip
+- [ ] Static typing

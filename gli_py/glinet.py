@@ -1,20 +1,18 @@
-import functools
-from typing import Union
+from typing import Optional
+from requests import Response
 from uplink import (
     Consumer,
     get,
     post,
-    returns,
     response_handler,
     Field,
     AiohttpClient,
     timeout)
-import asyncio
 
 # , Path, clients, RequestsClient, Query, headers,response,handler,
 # import cache
 
-from gli_py.error_handling import raise_for_status
+from .error_handling import raise_for_status
 # from json import loads
 
 
@@ -27,30 +25,24 @@ class GLinet(Consumer):
     """A Python Client for the GL-inet API."""
     def __init__(
         self,
-        token: str = None,
-        sync: bool = True,
+        token: Optional[str] = None,
         **kwargs
     ):
-        self.sync = sync
-        self.client = None
-        self._logged_in: bool = False
         self.token = token
-        if not self.sync:
-            self.client = AiohttpClient()
 
         # initialise the super class
-        super(GLinet, self).__init__(client=self.client, **kwargs)
+        super(GLinet, self).__init__(client=AiohttpClient(), **kwargs)
 
+        self._logged_in: bool = False
         if self.token is not None:
             self._logged_in = True
             self.session.headers["Authorization"] = self.token
 
     @post("router/login")
-    def _login(self, pwd: Field):
+    def _login(self, pwd: Field) -> Response:
         """fetches token"""
 
-    async def async_login(self, password: str) -> None:
-        assert(self.client is not None)
+    async def login(self, password: str) -> None:
         try:
             # use the token for auth for all requests henceforth
             res = await self._login(password)
@@ -61,101 +53,91 @@ class GLinet(Consumer):
             self._logged_in = False
             raise ConnectionRefusedError("Failed to authenticate with GL-inet. Error %s", err)
 
-    def login(self, password: str) -> None:
-        assert(self.client is None)
-        try:
-            # use the token for auth for all requests henceforth
-            res = self._login(password)
-            self.token = res['token']
-            self.session.headers["Authorization"] = self.token
-            self._logged_in = True
-            # print(self.session.headers["Authorization"])
-        except Exception as err:
-            # print("login failure")
-            self._logged_in = False
-            raise ConnectionRefusedError("Failed to authenticate with GL-inet. Error %s", err)
 
     @get("router/model")
-    def router_model(self):
-        """Retrieves the router's model, no auth required"""
-
-    # Basic device interaction
-    @get("router/model")
-    def router_model1(self):
+    def router_model(self) -> Response:
         """Retrieves the router's model, no auth required"""
 
     @get("router/mac/get")
-    def router_mac(self):
+    def router_mac(self) -> Response:
         """Retrieves the router's mac address"""
 
     @get("router/status")
-    def router_status(self):
+    def router_status(self) -> Response:
         """router status"""
 
     @get("firmware/onlinecheck")
-    def new_firmware(self):
+    def new_firmware(self) -> Response:
         """whether there is new firmware to upgrade"""
 
     @get("router/reboot")
-    def reboot(self):
+    def reboot(self) -> Response:
         """reboot router"""
 
     # Basic WAN interaction
 
     @get("wan/info")
-    def wan_ip(self):
-        """Retrieves the router's wan ip"""
+    def wan_ip(self) -> Response:
+        """Retrieves the router's wan ip
+        connected
+        {'macclone': False, 'up': True, 'cableinwan': True, 'online': True, 'ip': '432.653.65.6', 'mask': '0.0.0.0', 'proto': 'dhcp', 'gateway': 'xxx.xxx.xxx.xxx', 'dns': ['8.8.8.8'], 'device': 'eth0.2', 'passthrough': False, 'code': 0}
+        disconnected
+        {'macclone': False, 'up': True, 'cableinwan': True, 'online': False, 'proto': 'dhcp', 'device': 'eth0.2', 'passthrough': False, 'code': 0}
+        """
 
     @get("internet/public_ip/get")
-    def public_ip(self):
-        """Retrieves the router's public ip. Will give VPN IP is connected"""
+    def public_ip(self) -> Response:
+        """Retrieves the router's public ip. Will give VPN IP is connected
+        timesout
+        """
 
     @get("internet/reachable")
-    def connected_to_internet(self):
-        """Is the internet reachable"""
+    def connected_to_internet(self) -> Response:
+        """Is the internet reachable
+        Connected
+        {'reachable': True, 'code': 0}
+        Disconnected
+        timesout
+        """
 
     # Client information
 
     @get("client/list")
-    def list_all_clients(self):
+    def list_all_clients(self) -> Response:
         """gets all clients"""
 
     @get("router/static_leases/list")
-    def list_static_clients(self):
+    def list_static_clients(self) -> Response:
         """gets all static clients"""
 
-    def connected_clients(self) -> dict:
-        """gets all connected clients syncronously."""
-        assert self.client is None
-        clients = []
-        all_clients = self.list_all_clients()
-        for client in all_clients["clients"]:
-            if client['online'] is True:
-                clients[client['mac']] = client
-        return clients
-
-    async def async_connected_clients(self):
-        """gets all connected clients asyncronously."""
-        assert self.client is not None
+    async def connected_clients(self) -> dict:
+        """gets all connected clients asyncronously.
+        Returns a list of dictionaries with key being the mac addr and the dictionary
+        being client data
+        """
         clients = {}
         all_clients = await self.list_all_clients()
         for client in all_clients["clients"]:
             if client['online'] is True:
                 clients[client['mac']] = client
-        #print(clients)
         return clients
 
     # VPN information
 
     @get("wireguard/client/status")
-    def wireguard_client_state(self):
-        """Retrieves the wireguard status"""
+    def wireguard_client_state(self) -> Response:
+        """Retrieves the wireguard status
+        Connected
+        {'code': 0, 'download_config': False, 'enable': True, 'access': True, 'mode6': 'Native', 'ipaddr': '10.0.0.7', 'ipaddrv6': '', 'main_server': 'ServerName', 'rx': '65.15 KB', 'tx': '13.08 KB'}
+        disconnected
+        {'code': -204, 'download_config': False, 'enable': False, 'access': True, 'main_server': 'ServerName', 'rx': 'Unknown', 'tx': 'Unknown'}
+        """
 
     # SMS stuff
 
     # TODO untested
     @get("modem/info")
-    def _get_modems(self):
+    def _get_modems(self) -> Response:
         """Returns a list of modems"""
 
     # TODO untested
@@ -164,30 +146,16 @@ class GLinet(Consumer):
 
     # TODO untested
     @get("modem/sms/status")
-    def sms_status(self, modem_id: Field):
+    def sms_status(self, modem_id: Field) -> Response:
         """Retrieves the status of the SMS modem"""
 
     # TODO untested
     @post("modem/sms/send")
-    def _send_sms(self, modem_id: Field, message: Field, number: Field):
+    def _send_sms(self, modem_id: Field, message: Field, number: Field) -> Response:
         """send an SMS"""
 
     # TODO untested
-    def send_sms(self, number: str, message: str):
-        modems = self._get_modems()
-        # if there are no modems raise exception
-        if len(modems) == 0:
-            raise Exception("No modems found")
-        # if there is only one modem try and send the message
-        elif len(modems) == 1:
-            return self._send_sms(modems[0]["modem_id"], message, number)
-        elif len(modems) > 1:
-            for modem in modems:
-                if modem["SIM_status"] == 0:
-                    return self._send_sms(modem["modem_id"], message, number)
-
-    # TODO untested
-    async def async_send_sms(self, number: str, message: str):
+    async def send_sms(self, number: str, message: str) -> Response:
         modems = await self._get_modems()
         # if there are no modems raise exception
         if len(modems) == 0:
@@ -201,5 +169,5 @@ class GLinet(Consumer):
                     return await self._send_sms(modem["modem_id"], message, number)
 
     @property
-    def logged_in(self):
+    def logged_in(self) -> Response:
         return self._logged_in
