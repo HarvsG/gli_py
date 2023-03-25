@@ -17,6 +17,8 @@ I thought it would be handy to develop a python 3 wrapper for the API for easy i
 4. `poetry config virtualenvs.in-project true` create the venvs in the project folder
 5. `poetry install`
 6. `poetry shell`
+7. To run tests, ensure there is a file called `router_pwd` in the root directory with the router password in.
+8. Then run `pytest -s` to see responses, assumes the router is at `192.168.0.1`
 
 Todo list:
 - [ ] Decide on useful endpoints to expose
