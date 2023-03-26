@@ -21,10 +21,10 @@ I thought it would be handy to develop a python 3 wrapper for the API for easy i
 8. Then run `pytest -s` to see responses, assumes the router is at `192.168.0.1`
 
 Todo list:
-- [ ] Decide on useful endpoints to expose
+- [ ] Decide on useful endpoints to expose - see https://github.com/HarvsG/ha-glinet-integration#todo
 - [ ] Expose said endpoints
-- [ ] Write tests
-- [ ] Package correctly
+- [ ] Write remaining
+- [x] Package correctly
 - [x] Test that dev enviroment is re-producable
 - [x] Publish on pip
 - [ ] Static typing
