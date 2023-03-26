@@ -56,7 +56,9 @@ class GLinet(Consumer):
 
     @get("router/model")
     def router_model(self) -> Response:
-        """Retrieves the router's model, no auth required"""
+        """Retrieves the router's model, no auth required
+        {'internal_version': 'VC1D020ER22092110101', 'model': 'mt1300', 'code': 0}
+        """
 
     @get("router/mac/get")
     def router_mac(self) -> Response:
@@ -132,6 +134,14 @@ class GLinet(Consumer):
         disconnected
         {'code': -204, 'download_config': False, 'enable': False, 'access': True, 'main_server': 'ServerName', 'rx': 'Unknown', 'tx': 'Unknown'}
         """
+
+    @post("wireguard/client/stop")
+    def wireguard_client_stop(self) -> Response:
+        """Stops the wireguard client"""
+
+    @post("wireguard/client/start")
+    def wireguard_client_start(self, name:Field) -> Response:
+        """Stops the wireguard client"""
 
     # SMS stuff
 

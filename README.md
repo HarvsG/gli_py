@@ -19,6 +19,8 @@ I thought it would be handy to develop a python 3 wrapper for the API for easy i
 6. `poetry shell`
 7. To run tests, ensure there is a file called `router_pwd` in the root directory with the router password in.
 8. Then run `pytest -s` to see responses, assumes the router is at `192.168.0.1`
+9. Set token with `poetry config pypi-token.pypi TOKEN`
+10. publish with `poetry publish`
 
 Todo list:
 - [ ] Decide on useful endpoints to expose

@@ -36,6 +36,7 @@ models = [
 
 ]
 
+
 @pytest.fixture(scope="session")
 def event_loop():
     policy = asyncio.get_event_loop_policy()
@@ -50,6 +51,7 @@ async def test_router_model() -> None:
 	assert(response['model'] in models)
 	print(response)
 
+
 @pytest.mark.asyncio
 async def test_login() -> None:
 	with open('router_pwd', 'r') as file:
@@ -62,6 +64,11 @@ async def test_login() -> None:
 	print("-----------------")
 		
 @pytest.mark.asyncio
+async def test_router_mac() -> None:
+	response = await router.router_mac()
+	print(response)
+
+@pytest.mark.asyncio
 async def test_connected_clients() -> None:
 	clients = await router.connected_clients()
 	print(len(clients))
@@ -72,6 +79,23 @@ async def test_wireguard_client_states() -> None:
 	response = await router.wireguard_client_state()
 	print(response)
 	assert(response['enable'] in [True,False])
+	
+@pytest.mark.asyncio
+async def test_wireguard_client_stop() -> None:
+	response = await router.wireguard_client_stop()
+	print("stoping wg client")
+	print(response)
+	#assert(response['code'] == 0)
+
+@pytest.mark.asyncio
+async def test_wireguard_client_start() -> None:
+	response = await router.wireguard_client_state()
+	wg_server_name = response['main_server']
+	response = await router.wireguard_client_start(wg_server_name)
+	print("starting wg client")
+	print(response)
+	#assert(response['code'] == 0)
+
 
 @pytest.mark.asyncio
 async def test_wan_ip() -> None:

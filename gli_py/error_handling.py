@@ -22,7 +22,7 @@ def raise_for_status(response: Response):
         # status 200 messages - this is out of spec so we must handle it
         if res['code'] == -1:
             raise TokenError("Request returned error code -1 (InvalidAuth), is the token expired or the passowrd wrong?")
-        if res['code'] == -204:
+        if res['code'] in [-204,-203]: # these error codes represent non-error off states of some endpoints
             return res
         if res['code'] < 0:
             if 'msg' not in res:
