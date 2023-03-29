@@ -53,6 +53,9 @@ class GLinet(Consumer):
             self._logged_in = False
             raise ConnectionRefusedError("Failed to authenticate with GL-inet. Error %s", err)
 
+    @get("router/hello")
+    def router_hello(self) -> Response:  
+        """Gets a vrariety of basic router info, no login required"""
 
     @get("router/model")
     def router_model(self) -> Response:

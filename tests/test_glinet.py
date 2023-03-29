@@ -51,6 +51,13 @@ async def test_router_model() -> None:
 	assert(response['model'] in models)
 	print(response)
 
+@pytest.mark.asyncio
+async def test_router_hello() -> None:
+	response = await router.router_hello()
+	assert(response['code']==0)
+	assert(response['model'] in models)
+	print(response)
+
 
 @pytest.mark.asyncio
 async def test_login() -> None:
