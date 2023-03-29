@@ -131,6 +131,19 @@ class GLinet(Consumer):
 
     # VPN information
 
+    @get("router/vpn/status")
+    def client_vpn_status(self) -> Response:
+        """Retrieves all the VPN statuses
+        Connected
+        """
+
+    @get("wireguard/client/list")
+    def wireguard_client_list(self) -> Response:
+        """Retrieves the different WG client configurations
+        Does *NOT* return the list of clients connected to 
+        the WG server.
+        """
+
     @get("wireguard/client/status")
     def wireguard_client_state(self) -> Response:
         """Retrieves the wireguard status
@@ -148,6 +161,13 @@ class GLinet(Consumer):
     def wireguard_client_start(self, name:Field) -> Response:
         """Stops the wireguard client"""
 
+    @post("openvpn/client/stop")
+    def openvpn_client_stop(self) -> Response:
+        """Stops the wireguard client"""
+
+    @post("openvpn/client/start")
+    def openvpn_client_start(self, name:Field) -> Response:
+        """Stops the wireguard client"""
     # SMS stuff
 
     # TODO untested

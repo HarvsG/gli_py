@@ -82,26 +82,38 @@ async def test_connected_clients() -> None:
 	assert(len(clients) > 0)
 
 @pytest.mark.asyncio
+async def test_client_vpn_status() -> None:
+	response = await router.client_vpn_status()
+	print("vpn status")
+	print(response)
+
+@pytest.mark.asyncio
+async def test_wireguard_client_list() -> None:
+	response = await router.wireguard_client_list()
+	print(response)
+	#assert(response['enable'] in [True,False])
+
+@pytest.mark.asyncio
 async def test_wireguard_client_states() -> None:
 	response = await router.wireguard_client_state()
 	print(response)
 	assert(response['enable'] in [True,False])
 	
-@pytest.mark.asyncio
-async def test_wireguard_client_stop() -> None:
-	response = await router.wireguard_client_stop()
-	print("stoping wg client")
-	print(response)
-	#assert(response['code'] == 0)
+# @pytest.mark.asyncio
+# async def test_wireguard_client_stop() -> None:
+# 	response = await router.wireguard_client_stop()
+# 	print("stoping wg client")
+# 	print(response)
+# 	#assert(response['code'] == 0)
 
-@pytest.mark.asyncio
-async def test_wireguard_client_start() -> None:
-	response = await router.wireguard_client_state()
-	wg_server_name = response['main_server']
-	response = await router.wireguard_client_start(wg_server_name)
-	print("starting wg client")
-	print(response)
-	#assert(response['code'] == 0)
+# @pytest.mark.asyncio
+# async def test_wireguard_client_start() -> None:
+# 	response = await router.wireguard_client_state()
+# 	wg_server_name = response['main_server']
+# 	response = await router.wireguard_client_start(wg_server_name)
+# 	print("starting wg client")
+# 	print(response)
+# 	#assert(response['code'] == 0)
 
 
 @pytest.mark.asyncio

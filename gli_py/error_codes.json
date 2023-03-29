@@ -4,5 +4,6 @@
  "-251":"modem_id missing",
  "-260":"Destination phone number missing",
  "-261":"Message content missing",
- "-204":"Null"
+ "-204":"Null",
+ "-200": "Server must be stopped server before starting client!!!"
 }
