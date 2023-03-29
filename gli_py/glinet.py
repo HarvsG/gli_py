@@ -55,7 +55,9 @@ class GLinet(Consumer):
 
     @get("router/hello")
     def router_hello(self) -> Response:  
-        """Gets a vrariety of basic router info, no login required"""
+        """Gets a vrariety of basic router info, no login required
+        {'init': True, 'connected': True, 'configured': True, 'version': '3.215', 'firmware_user': '', 'firmware_type': '', 'model': 'mt1300', 'mac': '94:83:c4:11:44:76', 'type': 'router', 'name': '', 'code': 0}
+        """
 
     @get("router/model")
     def router_model(self) -> Response:
