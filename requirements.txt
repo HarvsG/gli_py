@@ -1,3 +1,0 @@
-requests==2.25.1
-uplink==0.9.7
-aiohttp==3.7.4.post0
