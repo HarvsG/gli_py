@@ -204,5 +204,5 @@ class GLinet(Consumer):
                     return await self._send_sms(modem["modem_id"], message, number)
 
     @property
-    def logged_in(self) -> Response:
+    def logged_in(self) -> bool:
         return self._logged_in
