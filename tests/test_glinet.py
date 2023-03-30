@@ -127,3 +127,11 @@ async def test_connected_to_internet() -> None:
 	response = await router.connected_to_internet()
 	print(response)
 	assert(response['reachable'] in [True,False])
+
+@pytest.mark.asyncio
+async def test_ping() -> None:
+	response = await router.ping("google.com")
+	print(response)
+	response = await router.ping("10.0.0.10")
+	print(response)
+	#assert(response['reachable'] in [True,False])

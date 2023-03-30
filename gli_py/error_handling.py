@@ -1,3 +1,4 @@
+import traceback
 from requests import Response
 from json import loads
 import asyncio
@@ -32,3 +33,19 @@ def raise_for_status(response: Response):
         return res
 
     raise UnsuccessfulRequest(response.url)
+
+#TODO
+# @uplink.error_handler
+# def timeout_error(exc_type: Exception, exc_val: TimeoutError, exc_tb: traceback):
+#     # wrap client error with custom API error
+#     print("some error")
+#     print(exc_type)
+#     print("some val")
+#     print(exc_val)
+#     print("some tb")
+#     print(exc_tb)
+#     print("-----------------")
+#     if isinstance(exc_val, asyncio.exceptions.TimeoutError):
+#         print("timeout error")
+#         return {"code":408}
+#     raise exc_val

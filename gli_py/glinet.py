@@ -7,12 +7,13 @@ from uplink import (
     response_handler,
     Field,
     AiohttpClient,
-    timeout)
+    timeout,
+    error_handler)
 
 # , Path, clients, RequestsClient, Query, headers,response,handler,
 # import cache
 
-from .error_handling import raise_for_status
+from .error_handling import raise_for_status, timeout_error
 # from json import loads
 
 
@@ -97,6 +98,11 @@ class GLinet(Consumer):
         """Retrieves the router's public ip. Will give VPN IP is connected
         timesout
         """
+    @timeout_error
+    @timeout(5)
+    @post("internet/ping")
+    def ping(self, ping_addr: Field) -> Response:
+        """Pings an addresss"""
 
     @get("internet/reachable")
     def connected_to_internet(self) -> Response:
