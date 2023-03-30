@@ -101,6 +101,8 @@ class GLinet(Consumer):
     @get("internet/reachable")
     def connected_to_internet(self) -> Response:
         """Is the internet reachable
+        *WARNING* sometimes timesout when internet is reachable
+        e.g when a VPN client is connecting
         Connected
         {'reachable': True, 'code': 0}
         Disconnected
